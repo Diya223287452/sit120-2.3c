@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue 3 Concepts</title>
+    <script src="https://unpkg.com/vue@3.2.6"></script>
+</head>
+<body>
+    <div id="app">
+        <!-- 1. Template Syntax -->
+        <h1>1. Template Syntax</h1>
+        <p>a. Text Interpolation: {{ message }}</p>
+        <p>b. The following is raw HTML (v-html).: <span v-html="rawHTML"></span></p>
+        <p>c. Attribute Bindings [v-bind:id]: <div :id="dynamicId"></div></p>
+        <p>d. JavaScript expressions nested within syntax i.e.{{ }}: {{ 1+2 }}</p>
+
+        <!-- 2. Methods -->
+        <h1>2. Methods</h1>
+        <button @click="sayHello">Say Hello Dia......welcome back</button>
+
+        <!-- 3. Reactivity Fundamentals [ref(), <script setup>] -->
+        <h1>3. Reactivity Fundamentals</h1>
+        <p>Counter: {{ count }}</p>
+        <button @click="increment">Increase by 1 every time you click here </button>
+
+        <!-- 4. Computed Properties -->
+        <h1>4. Computed Properties</h1>
+        <p>Reversed Message: {{ reversedMessage }}</p>
+
+        <!-- 5. Class and Style Bindings -->
+        <h1>5. Class and Style Bindings</h1>
+        <p :class="cssClasses">Binding CSS Classes </p>
+        <p :style="inlineStyles">Binding Inline Styles </p>
+
+        <!-- 6. List Rendering -->
+        <h1>6. List Rendering</h1>
+        <ul>
+            <li v-for="item in items" :key="item.id">{{ item.text }}</li>
+        </ul>
+
+        <!-- 7. Event Handling: Listening to Events [v-on:click] -->
+        <h1>7. Event Handling</h1>
+        <p>a. Inline Handlers: <button @click="inlineClick">Click it (Inline)</button></p>
+        <p>b. Method Handlers: <button @click="handleClick">Click it (Method)</button></p>
+
+        <!-- 8. Form Input Bindings -->
+        <h1>8. Form Input Bindings</h1>
+        <input type="text" v-model="textInput" />
+        <p>Text Input Value: {{ textInput }}</p>
+
+        <!-- 9. Watchers -->
+        <h1>9. Watchers</h1>
+        <p>Watched Value: {{ watchedValue }}</p>
+
+        <!-- 10. Components -->
+        <h1>10. Components</h1>
+        <child-component :message="parentMessage" @child-event="handleChildEvent"></child-component>
+
+        <!-- 11. Router -->
+        <h1>11. Router (Requires Vue Router Setup)</h1>
+        <router-link to="/about">Go to About</router-link>
+        <router-link to="/contact">Go to Contact</router-link>
+        <router-view></router-view>
+    </div>
+
+    <script>
+        const { createApp, ref, computed, watch } = Vue;
+
+        // 1. Template Syntax
+        const message = 'Hello, have a wonderful day!';
+        const rawHTML = '<span style="color: red;">This is raw HTML.</span>';
+        const dynamicId = 'element-id';
+
+        // 2. Methods
+        const sayHello = () => {
+            alert('Hello, have a great day from vue 3!'); 
+        };
+
+        // 3. Reactivity Fundamentals
+        const count = ref(0);
+        const increment = () => {
+            count.value++;
+        };
+
+        // 4. Computed Properties
+        const reversedMessage = computed(() => message.split('').reverse().join(''));
+
+        // 5. Class and Style Bindings
+        const cssClasses = ref('text-success');
+        const inlineStyles = ref('color:cyan;');
+
+        // 6. List Rendering
+        const items = [
+            { id: 1, text: 'object 1' },
+            { id: 2, text: 'object 2' },
+            { id: 3, text: 'object 3' },
+        ];
+
+        // 7. Event Handling
+        const inlineClick = () => {
+            alert('Clicked (Inline)');
+        };
+
+        const handleClick = () => {
+            alert('Clicked (Method)');
+        };
+
+        // 8. Form Input Bindings
+        const textInput = ref('');
+
+        // 9. Watchers
+        const watchedValue = ref('');
+
+        watch(watchedValue, (newValue, oldValue) => {
+            console.log(`Watched value changed from "${oldValue}" to "${newValue}"`);
+        });
+
+        // 10. Components
+        const parentMessage = 'hello!';
+
+
+        const ChildComponent = {
+            props: ['message'],
+            template: `<div>
+                          <p>{{ message }}</p>
+                          <button @click="sendMessage">Send message </button>
+                      </div>`,
+            methods: {
+                sendMessage() {
+                    this.$emit('child-event', 'hey mumma!');
+                },
+            },
+        };
+
+        const app = createApp({
+            data() {
+                return {
+                    message,
+                    rawHTML,
+                    dynamicId,
+                    textInput,
+                    count,
+                    reversedMessage,
+                    cssClasses,
+                    inlineStyles,
+                    items,
+                    parentMessage,
+                    watchedValue,
+                };
+            },
+            methods: {
+                sayHello,
+                handleClick,
+                inlineClick,
+                increment,
+                handleChildEvent(message) {
+                    alert(`Received from Child: ${message}`);
+                },
+            },
+        });
+
+        app.component('child-component', ChildComponent);
+
+        app.mount('#app');
+    </script>
+</body>
+</html>
+
+
